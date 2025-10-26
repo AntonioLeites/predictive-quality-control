@@ -403,9 +403,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **LinkedIn Article:** [Link to your LinkedIn post]
 
-**Author:** [Your Name]  
+**Author:** Antonio Leites  
 **LinkedIn:** [Your LinkedIn profile]  
-**Email:** [Your email]
+**Email:** antonio.leites@mac.com
 
 ---
 
