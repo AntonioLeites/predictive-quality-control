@@ -122,7 +122,7 @@ The REST API supports a custom threshold for classification (default = 0.5):
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/predictive-quality-control.git
+git clone https://github.com/AntonioLeites/predictive-quality-control.git
 cd predictive-quality-control
 
 # Create virtual environment
@@ -132,6 +132,11 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 ```
+You have **two alternatives** to explore this PoC:
+
+- Run the Jupyter Notebook (Full Analysis)
+- Step-by-Step Execution
+- 
 
 ### Run the Analysis
 
@@ -142,7 +147,6 @@ jupyter notebook
 # Open: notebooks/predictive_quality_control.ipynb
 # Run all cells (Ctrl+Enter)
 ```
-
 ### Expected Output
 
 The notebook will:
@@ -157,6 +161,43 @@ The notebook will:
    - Tool age analysis
    - Quality by shift
    - Real-time sensor trends
+
+Full analysis report is saved as:
+docs/Quality_Control_System_FullAnalysis.png
+
+![Quality Control System - Full Analysis](Quatlity_Control_System_FullAnalysys.png)
+
+### Step-by-Step Execution
+1.  Generate synthetic data
+```bash
+   python src/data_generation.py
+```
+
+2. Train the logistic regression model
+```bash
+   python src/model_training.py
+```
+3. Run the REST API
+```bash
+   uvicorn src.prediction_api:app --reload
+```
+4. Make predictions via API
+   ```bash
+   curl -X POST "http://127.0.0.1:8000/predict?threshold=0.5" -H "Content-Type: application/json" -d '{\
+   "oven_temperature_c": 240, \
+   "molding_pressure_bar": 160, \
+   "line_speed_mpm": 46, \
+   "ambient_humidity_pct": 40,  \
+   "material_thickness_mm": 2.5,  \
+   "material_strength_mpa": 355,  \
+   "cycle_time_sec": 12,  \
+   "machine_vibration_hz": 1.5,  \
+   "tool_age_hours": 420,  \
+   "shift": 2,  \
+   "operator_experience_years": 3,  \
+   "days_since_maintenance": 15  \
+   }'
+```
 
 ---
 
