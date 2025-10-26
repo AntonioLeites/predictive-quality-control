@@ -83,119 +83,38 @@ This creates a **realistic 5% defect rate** with clear causal relationships that
 
 ## 🔬 Model Performance
 
-### Test Set Results (500 samples, 26 actual defects)
+- **Model:** Logistic Regression
 
-**Confusion Matrix:**
+- **ROC-AUC:** ~0.63 (illustrative with synthetic data)
+
+### Threshold Flexibility
+The REST API supports a custom threshold for classification (default = 0.5):
+
 ```
-                  Predicted
-                  OK    Defect
-Actual    OK      451      23     (False Positives)
-          Defect    3      23     (False Negatives)
+{"defect_probability": 0.06, "predicted_defect": 0, "threshold_used": 0.5}
+{"defect_probability": 0.06, "predicted_defect": 0, "threshold_used": 0.3}
+
 ```
+- Lower threshold → higher recall, more false positives
 
-**Metrics:**
-- **Accuracy:** 94.8% (474 correct predictions out of 500)
-- **Precision:** 50.0% (23 TP / (23 TP + 23 FP))
-- **Recall:** 88.5% (23 TP / (23 TP + 3 FN)) ← **Critical metric**
-- **F1-Score:** 63.9%
-- **ROC-AUC:** 0.952
+- Higher threshold → fewer false positives, lower recall
 
-### Why These Metrics Matter
-
-**Recall (88.5%) is the most critical metric** because:
-- Only **3 defects** slipped through to customers (out of 26)
-- Each missed defect costs **10-100× more** than in-line detection
-- Manual inspection typically achieves 70-85% recall
-
-**Precision (50%) trade-off:**
-- 23 false alarms (false positives) are acceptable
-- Cost of inspecting a good part: ~€5
-- Cost of a defect reaching customer: ~€500
-- **ROI is still strongly positive**
-
-**ROC-AUC (0.952) indicates:**
-- Excellent discrimination capability
-- Model can reliably separate defective from good parts
-- Threshold can be adjusted based on business needs
 
 ---
 
-## 💰 Business Impact Calculations
+## 💰 Business Impact (Illustrative)
 
-### Assumptions (Conservative Industry Standards)
 
-```
-Production volume: 500,000 parts/year
-Manufacturing cost per part: €50
-Expected defect rate: 5% (25,000 defects/year)
-Cost per defect reaching customer: €500
-  (includes: warranty, logistics, rework, reputation damage)
-Cost per unnecessary inspection (FP): €5
-```
 
-### Scenario Comparison
+- Production volume: 500,000 parts/year
+- Defect rate: 5%
+- Cost per defect reaching customer: €500
+- Cost per false positive inspection: €5
 
-**Baseline (Manual Inspection - 75% recall):**
-```
-Defects caught: 25,000 × 0.75 = 18,750
-Defects reaching customer: 25,000 × 0.25 = 6,250
-Annual cost: 6,250 × €500 = €3,125,000
-```
+**Net annual savings:** ~€1.6M (synthetic scenario)
 
-**With ML Model (89% recall):**
-```
-Defects caught: 25,000 × 0.89 = 22,250
-Defects reaching customer: 25,000 × 0.11 = 2,750
-Annual cost: 2,750 × €500 = €1,375,000
 
-Additional defects prevented: 6,250 - 2,750 = 3,500
-Gross savings: 3,500 × €500 = €1,750,000
-```
 
-**Cost of False Alarms:**
-```
-FP rate in test: 23/500 = 4.6%
-Projected annual FPs: 500,000 × 0.046 = 23,000
-Cost: 23,000 × €5 = €115,000
-```
-
-**Net Annual Savings:**
-```
-€1,750,000 (avoided defects) - €115,000 (false alarms) = €1,635,000
-```
-
-### Sensitivity Analysis
-
-| Scenario | Defect Rate | Customer Cost | Annual Savings |
-|----------|-------------|---------------|----------------|
-| Conservative | 3% | €300 | €630K |
-| Base Case | 5% | €500 | €1,635K |
-| High Stakes | 8% | €1,000 | €5,600K |
-
----
-
-## 🔍 Feature Importance Analysis
-
-The model's coefficients reveal what truly drives defects:
-
-```
-Top Risk Factors (positive coefficients):
-1. temperatura_horno_c:        +0.42  (Temperature deviation)
-2. edad_herramienta_horas:     +0.38  (Tool wear)
-3. vibracion_maquina_hz:       +0.28  (Excessive vibration)
-4. presion_moldeado_bar:       +0.15  (Pressure variation)
-
-Protective Factors (negative coefficients):
-5. operador_experiencia_anos:  -0.22  (Experienced operators)
-6. mantenimiento_dias_desde:   -0.18  (Recent maintenance)
-```
-
-**Actionable Insights:**
-- **Temperature control is critical:** ±10°C deviation increases defect risk significantly
-- **Preventive maintenance:** Tools should be replaced at 400h, not run to failure at 500h
-- **Operator training ROI:** Experience reduces defects by 25%
-
----
 
 ## 🚀 Quick Start
 
