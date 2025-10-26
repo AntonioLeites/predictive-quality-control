@@ -21,7 +21,7 @@ def generate_synthetic_data(n_samples=2000, defect_rate=0.05, random_state=42):
     })
 
     defect_score = (
-        0.15 * np.abs(df["oven_temperature_c'"] - 220)
+        0.15 * np.abs(df["oven_temperature_c"] - 220)
         + 0.10 * np.abs(df["molding_pressure_bar"] - 150)
         + 0.12 * df["machine_vibration_hz"]
         + 0.08 * (df["tool_age_hours"] / 100)
@@ -33,3 +33,11 @@ def generate_synthetic_data(n_samples=2000, defect_rate=0.05, random_state=42):
     threshold = np.quantile(defect_score, 1 - defect_rate)
     df["defective"] = (defect_score > threshold).astype(int)
     return df
+
+
+if __name__ == "__main__":
+    import os
+    os.makedirs("data", exist_ok=True)
+    df = generate_synthetic_data()
+    df.to_csv("data/synthetic_production_data.csv", index=False)
+    print("Synthetic dataset created at data/synthetic_production_data.csv")

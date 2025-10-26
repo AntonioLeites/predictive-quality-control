@@ -8,3 +8,4 @@ flask>=2.3
 fastapi>=0.103
 uvicorn>=0.23
 jupyter>=1.0
+imblearn>1.7
