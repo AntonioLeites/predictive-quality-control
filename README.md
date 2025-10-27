@@ -198,7 +198,76 @@ docs/Quality_Control_System_FullAnalysis.png
    "days_since_maintenance": 15  \
    }'
 
+## 🐳 Run with Docker
 
+You can containerize and serve the Predictive Quality Control API using Docker or Docker Compose.
+
+### Option 1: Run with Docker
+
+Make sure you’re in the project root (where the deployment folder exists), then build and run the container:
+
+```bash
+# Build the image
+docker build -f deployment/Dockerfile -t predictive-quality-control .
+
+# Run the container
+docker run -d -p 8000:8000 --name predictive-quality-control predictive-quality-control
+```
+Once running, open the API documentation in your browser:
+
+👉 http://127.0.0.1:8000/docs
+
+---
+### Option 2: Run with Docker Compose (recommended)
+
+The project also includes a docker-compose.yml file that makes it easier to build and launch the API with the trained model automatically mounted.
+
+```bash
+   docker-compose up --build
+```
+
+This will:
+- Build the image using deployment/Dockerfile
+- Expose port 8000
+- Mount the models/ folder to /app/models in the container
+- Start the FastAPI server
+
+Stop the container anytime with:
+```bash
+   docker-compose down
+```
+### Test the API
+
+Once the container is running, you can send a POST request with sample sensor data, e.g.:
+```bash
+curl -X POST "http://127.0.0.1:8000/predict?threshold=0.3" \
+   -H "Content-Type: application/json" \
+   -d '{
+      "oven_temperature_c": 230,
+      "molding_pressure_bar": 160,
+      "line_speed_mpm": 47,
+      "ambient_humidity_pct": 50,
+      "material_thickness_mm": 2.6,
+      "material_strength_mpa": 355,
+      "cycle_time_sec": 13,
+      "machine_vibration_hz": 2.1,
+      "tool_age_hours": 220,
+      "shift": 2,
+      "operator_experience_years": 8,
+      "days_since_maintenance": 10
+   }'
+
+```
+Expected response:
+```bash
+{
+  "defect_probability": 0.27,
+  "predicted_defect": 0,
+  "threshold_used": 0.3
+}
+
+```
+---
 ## 🏗️ Enterprise Architecture: SAP Integration
 
 This POC becomes production-ready when integrated with SAP systems:

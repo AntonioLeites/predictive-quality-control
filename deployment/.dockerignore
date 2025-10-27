@@ -1,0 +1,43 @@
+# Ignore Python cache & virtual environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.log
+*.tmp
+*.swp
+.env/
+venv/
+env/
+.venv/
+.idea/
+.vscode/
+
+# Ignore Jupyter notebook cache
+.ipynb_checkpoints/
+
+# Ignore OS and user files
+.DS_Store
+Thumbs.db
+
+# Ignore data and generated results (retrain inside container if needed)
+data/
+notebooks/
+reports/
+*.csv
+*.pdf
+*.png
+
+# Ignore git and build files
+.git/
+.gitignore
+docker-compose.yml
+Dockerfile
+deployment/Dockerfile
+deployment/requirements.txt
+
+# Keep only what Dockerfile copies explicitly
+!src/
+!models/
+!deployment/requirements.txt

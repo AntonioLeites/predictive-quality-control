@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  predictive-quality-control:
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile
+    container_name: predictive-quality-control
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models   # allows retraining outside Docker and using same model
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TZ=Europe/Madrid
+    restart: unless-stopped
