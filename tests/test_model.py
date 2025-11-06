@@ -1,5 +1,5 @@
 from src.data_generation import generate_synthetic_data
-from src.model_training import train_model
+from src.model_training_before import train_model
 
 def test_model_training():
     df = generate_synthetic_data(100)

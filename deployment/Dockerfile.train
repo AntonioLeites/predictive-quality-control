@@ -1,0 +1,37 @@
+# ==========================================================
+#  TRAINING DOCKERFILE
+#  Builds: logistic regression model for Predictive Quality
+#  Author: Antonio Leites
+# ==========================================================
+
+FROM python:3.10-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy all requirements files
+COPY deployment/requirements-common.txt deployment/requirements-train.txt ./
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements-train.txt
+
+# Copy all source code (ensures helper imports like utils.py)
+COPY src/ src/
+COPY data/synthetic_production_data.csv data/
+
+# Create model output directory
+RUN mkdir -p /app/model
+
+# Environment variables
+ENV AI_CORE_MODE=true
+# Ensures logs are shown in real time
+ENV PYTHONUNBUFFERED=1          
+ENV MODEL_PATH=/app/model/logistic_regression_v1.pkl
+
+# Metadata labels
+LABEL ai.sap.com/component="training"
+LABEL ai.sap.com/scenario="predictive-quality-scen"
+LABEL maintainer="Antonio Leites <aleites2022>"
+
+# Entry point: run training script
+CMD ["python", "src/model_training.py"]

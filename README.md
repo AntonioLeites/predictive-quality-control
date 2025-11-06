@@ -268,9 +268,27 @@ Expected response:
 
 ```
 ---
+## ☁️ Integration with SAP BTP and S/4HANA
+
+Once the Predictive Quality Control API is containerized, it can be deployed and consumed in your SAP BTP landscape to extend S/4HANA manufacturing or quality processes.
+
+## 1️⃣ Deploy to SAP BTP
+
+You can deploy the Docker image to **SAP BTP, Kyma Runtime** or **SAP AI Core**:
+
+- Kyma Runtime
+
+  1. Push the image to your container registry (Docker Hub, GHCR, or SAP GAR).
+```bash
+   docker tag predictive-quality-control <your_registry>/predictive-quality-control:latest
+   docker push <your_registry>/predictive-quality-control:latest
+```
+
+
+---
+
 ## 🏗️ Enterprise Architecture: SAP Integration
 
-This POC becomes production-ready when integrated with SAP systems:
 This POC becomes production-ready when integrated with SAP systems:
 ```
 ┌─────────────────────────────────────────────────────────────┐

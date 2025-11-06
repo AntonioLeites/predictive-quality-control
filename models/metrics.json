@@ -1,0 +1,25 @@
+{
+  "accuracy": 0.628,
+  "roc_auc": 0.6126315789473684,
+  "true_positives": 14,
+  "false_positives": 175,
+  "false_negatives": 11,
+  "true_negatives": 300,
+  "samples_train": 1500,
+  "samples_test": 500,
+  "defect_rate": 0.05,
+  "features": [
+    "oven_temperature_c",
+    "molding_pressure_bar",
+    "line_speed_mpm",
+    "ambient_humidity_pct",
+    "material_thickness_mm",
+    "material_strength_mpa",
+    "cycle_time_sec",
+    "machine_vibration_hz",
+    "tool_age_hours",
+    "shift",
+    "operator_experience_years",
+    "days_since_maintenance"
+  ]
+}

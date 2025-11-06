@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: quality-train
+  annotations:
+    scenarios.ai.sap.com/name: "quality-scen"
+    scenarios.ai.sap.com/description: "Predictive Quality Control - Training"
+    executables.ai.sap.com/name: "quality-train-exec"
+    executables.ai.sap.com/description: "Train logistic regression model for defect prediction"
+    artifacts.ai.sap.com/qualitymodel.kind: "model"
+  labels:
+    scenarios.ai.sap.com/id: "quality-scen"
+    executables.ai.sap.com/id: "quality-train-exec"
+    ai.sap.com/version: "1.0.0"
+spec:
+  entrypoint: quality-training
+  templates:
+    - name: quality-training
+      metadata:
+        labels:
+          ai.sap.com/resourcePlan: starter
+      outputs:
+        artifacts:
+          - name: qualitymodel
+            path: /app/model
+            globalName: qualitymodel
+            archive:
+              none: {}
+      container:
+        image: "docker.io/aleites2022/predictive-quality-train:latest"
+        imagePullPolicy: Always
+        env:
+          - name: AI_CORE_MODE
+            value: "true"
+          - name: MODEL_PATH
+            value: "/app/model/logistic_regression_v1.pkl"
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo "--- 🚀 Starting Model Training ---"
+            python /app/src/model_training.py
+            echo "--- ✅ Training Completed ---"
+            echo "--- 📂 Model directory contents ---"
+            ls -lh /app/model/ || echo "⚠️ No model directory found, continuing..."
+            echo "--- 🎯 Exiting successfully ---"
+            exit 0

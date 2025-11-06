@@ -1,0 +1,49 @@
+apiVersion: ai.sap.com/v1alpha1
+kind: ServingTemplate
+metadata:
+  name: quality-serve
+  annotations:
+    scenarios.ai.sap.com/name: "quality-scen"
+    scenarios.ai.sap.com/description: "Predictive Quality Control - Serving"
+    executables.ai.sap.com/name: "quality-serve-exec"
+    executables.ai.sap.com/description: "Serve Logistic Regression model for defect prediction"
+  labels:
+    scenarios.ai.sap.com/id: "quality-scen"
+    executables.ai.sap.com/id: "quality-serve-exec"
+    ai.sap.com/version: "1.0.0"
+spec:
+  # Declare expected input artifact so AI Core knows what to fetch and where to mount it
+  inputs:
+    artifacts:
+      - name: qualitymodel
+        path: /app/model                  # path inside container where AI Core will unpack the artifact
+  template:
+    apiVersion: "serving.kserve.io/v1beta1"
+    metadata:
+      annotations: |
+        autoscaling.knative.dev/metric: concurrency
+        autoscaling.knative.dev/target: "1"
+        autoscaling.knative.dev/targetBurstCapacity: "0"
+      labels: |
+        ai.sap.com/resourcePlan: starter
+    spec: |
+      predictor:
+        minReplicas: 1
+        maxReplicas: 5
+        # If your image is public you can omit imagePullSecrets.
+        containers:
+          - name: kserve-container
+            image: "docker.io/aleites2022/predictive-quality-serve:latest"
+            ports:
+              - containerPort: 9001
+                protocol: TCP
+            env:
+              # AI Core will inject/mount the artifact into /app/model based on the 'inputs' section.
+              # We also set MODEL_PATH explicitly so your app knows where to look.
+              - name: AI_CORE_MODE
+                value: "true"
+              - name: MODEL_PATH
+                value: "/app/model/logistic_regression_v1.pkl"
+              # Optional: STORAGE_URI will contain the artifact URL (if you want the container to download itself)
+              - name: STORAGE_URI
+                value: "{{inputs.artifacts.qualitymodel}}"

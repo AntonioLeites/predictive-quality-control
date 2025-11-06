@@ -1,0 +1,36 @@
+# ==========================================================
+#  SERVING DOCKERFILE
+#  Deploys: FastAPI model serving for Predictive Quality
+#  Author: Antonio Leites
+# ==========================================================
+
+FROM python:3.10-slim
+
+# Working directory
+WORKDIR /app
+
+# Copy all requirements files
+COPY deployment/requirements-common.txt deployment/requirements-serve.txt ./
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements-serve.txt
+
+# Copy application source
+COPY src/ src/
+RUN mkdir -p /app/model
+
+# Environment
+ENV AI_CORE_MODE=true
+ENV PYTHONUNBUFFERED=1
+ENV MODEL_PATH=/app/model/logistic_regression_v1.pkl
+
+# Expose FastAPI port
+EXPOSE 9001
+
+# Metadata labels (for AI Core discoverability)
+LABEL ai.sap.com/component="serving"
+LABEL ai.sap.com/scenario="predictive-quality-scen"
+LABEL maintainer="Antonio Leites <aleites2022>"
+
+# Run FastAPI with Uvicorn
+CMD ["uvicorn", "src.prediction_api:app", "--host", "0.0.0.0", "--port", "9001"]
