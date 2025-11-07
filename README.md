@@ -5,7 +5,7 @@
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.3+-orange.svg)](https://scikit-learn.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Companion repository for LinkedIn article:** *From €50K/Month Losses to Real-Time Quality Control*
+**Companion repository for LinkedIn article:** *From Reactive to Predictive Quality Control in Manufacturing*
 
 ---
 
@@ -515,7 +515,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 📬 Contact & Discussion
 
-**LinkedIn Article:** [Link to your LinkedIn post]
+**LinkedIn Article:** https://www.linkedin.com/pulse/from-reactive-predictive-quality-control-antonio-leites-jpj6f
 
 **Author:** Antonio Leites  
 **LinkedIn:** https://www.linkedin.com/in/antonioleites/  
