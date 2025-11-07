@@ -274,16 +274,80 @@ Once the Predictive Quality Control API is containerized, it can be deployed and
 
 ## 1️⃣ Deploy to SAP BTP
 
-You can deploy the Docker image to **SAP BTP, Kyma Runtime** or **SAP AI Core**:
+Once the Predictive Quality Control API is containerized, it can be deployed into **SAP BTP** to be consumed by applications, **SAP Joule skills**, and **S/4HANA** quality processes.
 
-- Kyma Runtime
+You can deploy this project in two ways:
 
-  1. Push the image to your container registry (Docker Hub, GHCR, or SAP GAR).
+### **Option 1 — Deploy to SAP BTP Kyma Runtime**
+
+Push the container image to your registry (Docker Hub, GitHub Container Registry, or SAP GAR):
+
 ```bash
-   docker tag predictive-quality-control <your_registry>/predictive-quality-control:latest
-   docker push <your_registry>/predictive-quality-control:latest
+docker tag predictive-quality-control <your_registry>/predictive-quality-control:latest
+docker push <your_registry>/predictive-quality-control:latest
 ```
+### **Option 2 — Deploy to SAP AI Core** (recommended for scalable model serving)
+This deployment model is used when the inference service should run in a managed, scalable compute environment, and optionally when retraining is executed in SAP AI Core pipelines.
 
+#### **0. Prepare Artifacts**
+
+| Component / File | Purpose |
+|---------|---------|
+| `Dockerfile.train`|Used when training will run in AI Core |
+| `Dockerfile.serve` | Used to serve inference as an API |
+| `training-template.yaml`  | Contains argo file for defining Scenario |
+| `serving-template.yaml`  | Contains argo file for defining Scenario |
+
+
+If the registry is private, create an AI Core registry secret for image pulling.
+
+#### **1. Add a Git Repository**
+You can use your own git repository to version control your SAP AI Core templates. The GitOps onboarding to
+SAP AI Core instances involves setting up your git repository and synchronizing your content.
+You will need to generate a personal access token for your git repository.
+```bash
+# Include the training template (WorkflowTemplate) and the serving template (ServingTemplate)
+deployment/training-template.yaml
+deployment/serving-template.yaml
+```
+#### **2. Create an Application**
+After registering your Git repository, create an application to sync the templates in your repository.
+After the GitOps setup is completed, the templates in your git repository are automatically synced to SAP AI
+Core. 
+
+This will create your scenario. 
+A scenario is an implementation of a specific AI use case within a user's tenant. It consists of a pre-defined set
+of AI capabilities in the form of executables and templates.
+#### **2. Create Training Configuration**
+
+A configuration is a collection of parameters, artifact references (such as datasets or models), and
+environment settings that are used to instantiate and run an execution or deployment of an executable or
+template.
+
+
+#### **3. Create Execution for Training**
+Workflow templates are built on the Argo Workflows engine and are defined as WorkflowTemplates.
+These are your cluster's workflow definitions.
+
+#### **4. Create the Serving Configuration**
+Deploy а trained machine learning model as a Web service to serve inference
+requests of trained models with high performance.
+The serving templates are used to create model servers. When a model server is up and running, it processes
+incoming inference requests and returns the results from the AI learning model. Serving templates define how
+a model is to be deployed.
+
+
+
+#### **5. Deploy the Model Serving Endpoint**
+The duration of a deployment can be limited using the ttl parameter. It takes an integer for quantity, and
+a single letter to specify units of time. Only minutes (m), hours (h) and days (d), are supported, and values
+must be natural numbers. For example, "ttl": "5h" gives the deployment a duration of 5 hours. 4.5h and
+4h30m are not valid inputs. If no value is passed, the duration of the deployment if indefinite. Once the duration
+expires, the deployment is stopped and deleted..
+
+#### **6. Retrieve the Public Inference Endpoint**
+
+Use the URL from your model deployment to access the results of your model.
 
 ---
 
@@ -343,23 +407,23 @@ This POC becomes production-ready when integrated with SAP systems:
 
 ### Implementation Steps
 
-1. **Deploy ML Model to BTP AI Core** (Week 1)
+1. **Deploy ML Model to BTP AI Core** 
    - Package model as Docker container
    - Deploy to AI Core with auto-scaling
    - Expose REST endpoint
 
-2. **Create Joule Skills** (Week 2)
+2. **Create Joule Skills** 
    - `getSensorData(lineId)` → Plant Connectivity
    - `predictDefectRisk(sensors)` → AI Core
    - `getProductionContext(lineId)` → S/4HANA PP/QM
    - `analyzeRootCause(lineId)` → Orchestrates above
 
-3. **Configure Plant Connectivity** (Week 2-3)
+3. **Configure Plant Connectivity** 
    - Install PCo agents on production line
    - Map SCADA tags to SAP structure
    - Enable real-time streaming
 
-4. **Enable Automated Actions** (Week 3)
+4. **Enable Automated Actions** 
    - Risk > 70% → Create QM notification
    - Risk > 85% → Trigger maintenance workflow
    - Daily summary → Email to quality manager
