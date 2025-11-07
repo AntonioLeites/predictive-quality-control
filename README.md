@@ -518,8 +518,8 @@ MIT License - see [LICENSE](LICENSE) file for details.
 **LinkedIn Article:** [Link to your LinkedIn post]
 
 **Author:** Antonio Leites  
-**LinkedIn:** [Your LinkedIn profile]  
-**Email:** antonio.leites@mac.com
+**LinkedIn:** https://www.linkedin.com/in/antonioleites/  
+**Email:** antonio.leites-lopez@sulzer.de
 
 ---
 
