@@ -405,12 +405,16 @@ This POC becomes production-ready when integrated with SAP systems:
 ```
 
 
-### Implementation Steps
+### Roadmap
+
+#### **Phase 1: Proof of Concept**
 
 1. **Deploy ML Model to BTP AI Core** 
    - Package model as Docker container
    - Deploy to AI Core with auto-scaling
    - Expose REST endpoint
+
+#### **Phase 2: Next Steps**
 
 2. **Create Joule Skills** 
    - `getSensorData(lineId)` → Plant Connectivity
